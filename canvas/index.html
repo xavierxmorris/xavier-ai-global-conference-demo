@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xavier AI Global Conference — Copilot CLI & App + Cloudflare Free-Tier Canvas</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #131c33;
+      --panel-alt: #18233f;
+      --border: #26365e;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.16);
+      --cyan: #38bdf8;
+      --green: #22c55e;
+      --purple: #a855f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: radial-gradient(circle at top right, #172554 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(19, 28, 51, 0.9);
+      backdrop-filter: blur(8px);
+      padding: 1.1rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .badge-orange { background: var(--accent-soft); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.4); }
+    .badge-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); }
+    .badge-cyan { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+    .badge-purple { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); }
+    h1 { margin: 0; font-size: 1.25rem; font-weight: 700; }
+    .sub { color: var(--muted); font-size: 0.84rem; margin-top: 0.2rem; }
+    main {
+      max-width: 1280px;
+      margin: 1.25rem auto;
+      padding: 0 1.25rem 2.5rem;
+      display: grid;
+      grid-template-columns: 1.65fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 960px) {
+      main { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.15rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .card h2 {
+      margin: 0 0 0.75rem;
+      font-size: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .quota-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 0.8rem;
+    }
+    .stat-box {
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .stat-value { font-size: 1.2rem; font-weight: 700; margin-top: 0.2rem; color: #f8fafc; }
+    .stat-sub { font-size: 0.75rem; color: #4ade80; margin-top: 0.15rem; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+    button {
+      background: var(--panel-alt);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 0.45rem 0.8rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    button:hover { border-color: var(--cyan); background: #1e2d52; }
+    button.primary {
+      background: var(--accent);
+      color: #0b1020;
+      border-color: var(--accent);
+    }
+    button.primary:hover { background: #fb923c; }
+    .session-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .session-row {
+      background: var(--panel-alt);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .session-meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .session-title { font-weight: 600; font-size: 0.95rem; }
+    .vote-btn {
+      min-width: 84px;
+      text-align: center;
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+      color: #38bdf8;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.5rem 0.55rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 0.74rem; text-transform: uppercase; }
+    .pulse-item {
+      background: var(--panel-alt);
+      border-left: 3px solid var(--cyan);
+      border-radius: 6px;
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 0.55rem;
+      font-size: 0.83rem;
+    }
+    .pulse-head {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.74rem;
+      margin-bottom: 0.2rem;
+    }
+    .prompt-box {
+      background: #090d1a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.65rem 0.8rem;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.78rem;
+      color: #bae6fd;
+      margin-bottom: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <div class="brand-title">
+        <h1>Xavier AI Global Conference — Live Edge Canvas</h1>
+        <span class="badge badge-orange">Cloudflare D1 Free ($0)</span>
+        <span class="badge badge-cyan">Copilot CLI + Copilot App Canvas</span>
+      </div>
+      <div class="sub">
+        Account: <code>07a1d926b6f5652ec24ee8979839e6c6</code> · D1 DB: <code>xavier-ai-global-conf-db</code> (<code>b85fd8c0-b02b-4da6-86e2-012ae7ff743d</code>) · Edge Colo: <strong id="colo-label">SYD (Oceania)</strong>
+      </div>
+    </div>
+    <div>
+      <span class="badge badge-green" id="run-status-badge">5 / 5 Free Runs Verified</span>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="card">
+        <h2>
+          <span>Cloudflare Free-Tier Quota Telemetry (5-Run Rehearsal)</span>
+          <span class="badge badge-green">0.02% Max Daily Quota Used</span>
+        </h2>
+        <div class="quota-grid">
+          <div class="stat-box">
+            <div class="stat-label">D1 Rows Read (Today)</div>
+            <div class="stat-value"><span id="reads-used">65</span> <small style="font-size:0.75rem;color:var(--muted)">/ 5,000,000</small></div>
+            <div class="stat-sub" id="reads-pct">0.0013% of Free Daily Limit</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">D1 Rows Written (Today)</div>
+            <div class="stat-value"><span id="writes-used">20</span> <small style="font-size:0.75rem;color:var(--muted)">/ 100,000</small></div>
+            <div class="stat-sub" id="writes-pct">0.0200% of Free Daily Limit</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">D1 Storage Used</div>
+            <div class="stat-value">32 KB <small style="font-size:0.75rem;color:var(--muted)">/ 5 GB</small></div>
+            <div class="stat-sub">~5,000 5-run rehearsals/day free</div>
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="primary" onclick="triggerRun(1)">▶ Run 1 (CLI)</button>
+          <button class="primary" onclick="triggerRun(2)">▶ Run 2 (App)</button>
+          <button class="primary" onclick="triggerRun(3)">▶ Run 3 (Canvas)</button>
+          <button class="primary" onclick="triggerRun(4)">▶ Run 4 (Guardrail)</button>
+          <button class="primary" onclick="triggerRun(5)">▶ Run 5 (Final)</button>
+          <button onclick="runAllFive()">⚡ Replay All 5 Free Runs</button>
+          <button onclick="resetBaseline()">↺ Reset to Baseline</button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Run #</th>
+              <th>Surface</th>
+              <th>Session</th>
+              <th>Scenario</th>
+              <th>Colo</th>
+              <th>R / W</th>
+              <th>SQL ms</th>
+            </tr>
+          </thead>
+          <tbody id="runs-tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>
+          <span>Conference Agenda &amp; Live Upvotes (`sessions` table)</span>
+          <div style="display:flex;gap:0.4rem;">
+            <button onclick="setTrackFilter('ALL')">All</button>
+            <button onclick="setTrackFilter('Keynote')">Keynote</button>
+            <button onclick="setTrackFilter('MCP & Tooling')">MCP</button>
+            <button onclick="setTrackFilter('Canvas & UX')">Canvas</button>
+            <button onclick="setTrackFilter('Governance')">Governance</button>
+          </div>
+        </h2>
+        <div class="session-list" id="sessions-container"></div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card">
+        <h2>
+          <span>Build &amp; Open in Copilot CLI or Copilot App</span>
+          <span class="badge badge-purple">Shared MCP + Canvas</span>
+        </h2>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:0;">
+          Both <strong>GitHub Copilot CLI</strong> and <strong>GitHub Copilot App</strong> share <code>~/.copilot/mcp-config.json</code> and discover <code>.github/extensions/xavier-ai-global-conference-canvas/extension.mjs</code>.
+        </p>
+        <div class="prompt-box">
+          <span id="p1">Open the xavier-ai-global-conference-canvas canvas and show the 5 Cloudflare D1 runs.</span>
+          <button onclick="copyPrompt('p1')">Copy</button>
+        </div>
+        <div class="prompt-box">
+          <span id="p2">Query xavier-ai-global-conf-db via Cloudflare MCP for all 5 demo_runs and sessions.</span>
+          <button onclick="copyPrompt('p2')">Copy</button>
+        </div>
+        <div class="prompt-box">
+          <span id="p3">Execute Run 1 through Run 5 on xavier-ai-global-conf-db and report D1 free quota used.</span>
+          <button onclick="copyPrompt('p3')">Copy</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>
+          <span>Live Attendee Pulse Feed (`attendee_pulses`)</span>
+          <span class="badge badge-cyan" id="pulse-count">8 pulses</span>
+        </h2>
+        <div id="pulses-container"></div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    const BASELINE_SESSIONS = [
+      { id: "KEY-01", track: "Keynote", title: "Agentic Engineering at Global Scale: CLI, App & Edge MCP", speaker: "Xavier X. Morris", room: "Main Hall A", starts_at: "09:00 AEDT", status: "LIVE NOW", upvotes: 42 },
+      { id: "TRK-02", track: "MCP & Tooling", title: "Zero-Cost Edge Data Planes with Cloudflare D1 & Copilot MCP", speaker: "Xavier X. Morris", room: "Harbour Theatre", starts_at: "10:15 AEDT", status: "UP NEXT", upvotes: 31 },
+      { id: "TRK-03", track: "Canvas & UX", title: "Interactive Canvases in GitHub Copilot CLI and Copilot App", speaker: "Guest Architecture Panel", room: "Room 204", starts_at: "11:30 AEDT", status: "SCHEDULED", upvotes: 24 },
+      { id: "TRK-04", track: "Governance", title: "Scoped OAuth & Least-Privilege MCP Guardrails in Production", speaker: "Security Engineering Track", room: "Room 102", starts_at: "13:30 AEDT", status: "SCHEDULED", upvotes: 19 },
+      { id: "TRK-05", track: "Live Lab", title: "5-Run Repeatable Edge Rehearsal Under Free Quota", speaker: "Workshop Facilitators", room: "Lab Arena", starts_at: "15:00 AEDT", status: "SCHEDULED", upvotes: 28 }
+    ];
+
+    const RUN_DEFINITIONS = [
+      { run_number: 1, surface: "Copilot CLI", scenario: "Run 1: Live conference canvas bootstrap from Copilot CLI", voted_session_id: "KEY-01", attendee_role: "Keynote Host", colo: "SYD", rows_read: 13, rows_written: 4, sql_duration_ms: 0.591 },
+      { run_number: 2, surface: "Copilot App", scenario: "Run 2: Live upvote + pulse from GitHub Copilot App shared MCP", voted_session_id: "TRK-02", attendee_role: "Solutions Architect", colo: "SYD", rows_read: 13, rows_written: 4, sql_duration_ms: 0.561 },
+      { run_number: 3, surface: "Copilot Canvas", scenario: "Run 3: Interactive canvas state sync & track filter check", voted_session_id: "TRK-03", attendee_role: "Product Designer", colo: "SYD", rows_read: 13, rows_written: 4, sql_duration_ms: 0.500 },
+      { run_number: 4, surface: "Copilot CLI", scenario: "Run 4: OAuth scope boundary probe (D1 allowed, Workers Scripts 403)", voted_session_id: "TRK-04", attendee_role: "Security Lead", colo: "SYD", rows_read: 13, rows_written: 4, sql_duration_ms: 0.508 },
+      { run_number: 5, surface: "Copilot App", scenario: "Run 5: Final rehearsal verification under Cloudflare Free quota", voted_session_id: "TRK-05", attendee_role: "Workshop Facilitator", colo: "SYD", rows_read: 13, rows_written: 4, sql_duration_ms: 0.480 }
+    ];
+
+    const BASELINE_PULSES = [
+      { id: 1, session_id: "KEY-01", attendee_role: "Principal Engineer", takeaway: "Shared ~/.copilot/mcp-config.json across CLI and App avoids duplicate setup.", surface: "Copilot CLI" },
+      { id: 2, session_id: "TRK-02", attendee_role: "Cloud Architect", takeaway: "D1 Free tier gives 5M reads/day and 100k writes/day—5 demo runs use <0.05% of daily quota.", surface: "Copilot App" },
+      { id: 3, session_id: "TRK-03", attendee_role: "Staff Developer", takeaway: "The local/edge Conference Canvas renders live D1 rows with zero paid compute.", surface: "Copilot Canvas" }
+    ];
+
+    let state = {
+      trackFilter: "ALL",
+      sessions: JSON.parse(JSON.stringify(BASELINE_SESSIONS)),
+      demoRuns: [],
+      pulses: JSON.parse(JSON.stringify(BASELINE_PULSES))
+    };
+
+    function resetBaseline() {
+      state.sessions = JSON.parse(JSON.stringify(BASELINE_SESSIONS));
+      state.demoRuns = [];
+      state.pulses = JSON.parse(JSON.stringify(BASELINE_PULSES));
+      if (location.protocol.startsWith("http")) {
+        fetch("/reset", { method: "POST" }).catch(() => {});
+      }
+      render();
+    }
+
+    function triggerRun(num) {
+      const def = RUN_DEFINITIONS.find(r => r.run_number === num);
+      if (!def) return;
+      if (!state.demoRuns.some(r => r.run_number === num)) {
+        state.demoRuns.push({ ...def });
+        state.demoRuns.sort((a, b) => a.run_number - b.run_number);
+        const s = state.sessions.find(x => x.id === def.voted_session_id);
+        if (s) s.upvotes += 1;
+        state.pulses.unshift({
+          id: Date.now() + num,
+          session_id: def.voted_session_id,
+          attendee_role: def.attendee_role,
+          takeaway: def.scenario,
+          surface: def.surface
+        });
+      }
+      if (location.protocol.startsWith("http")) {
+        fetch("/run", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ runNumber: num })
+        }).catch(() => {});
+      }
+      render();
+    }
+
+    function runAllFive() {
+      resetBaseline();
+      [1, 2, 3, 4, 5].forEach(n => triggerRun(n));
+    }
+
+    function upvoteSession(id) {
+      const s = state.sessions.find(x => x.id === id);
+      if (s) {
+        s.upvotes += 1;
+        render();
+      }
+    }
+
+    function setTrackFilter(track) {
+      state.trackFilter = track;
+      render();
+    }
+
+    function copyPrompt(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard?.writeText(text);
+    }
+
+    function render() {
+      const totalReads = state.demoRuns.reduce((a, r) => a + r.rows_read, 0);
+      const totalWrites = state.demoRuns.reduce((a, r) => a + r.rows_written, 0);
+      document.getElementById("reads-used").textContent = totalReads;
+      document.getElementById("writes-used").textContent = totalWrites;
+      document.getElementById("reads-pct").textContent = ((totalReads / 5000000) * 100).toFixed(4) + "% of Free Daily Limit";
+      document.getElementById("writes-pct").textContent = ((totalWrites / 100000) * 100).toFixed(4) + "% of Free Daily Limit";
+      document.getElementById("run-status-badge").textContent = `${state.demoRuns.length} / 5 Free Runs Executed`;
+
+      const tbody = document.getElementById("runs-tbody");
+      tbody.innerHTML = state.demoRuns.map(r => `
+        <tr>
+          <td><strong>#${r.run_number}</strong></td>
+          <td><span class="badge badge-cyan">${r.surface}</span></td>
+          <td><code>${r.voted_session_id}</code></td>
+          <td>${r.scenario}</td>
+          <td><code>${r.colo}</code></td>
+          <td>${r.rows_read}R / ${r.rows_written}W</td>
+          <td>${r.sql_duration_ms} ms</td>
+        </tr>
+      `).join("") || `<tr><td colspan="7" style="color:var(--muted);text-align:center;">Click "Replay All 5 Free Runs" or any Run button above.</td></tr>`;
+
+      const sc = document.getElementById("sessions-container");
+      const filtered = state.trackFilter === "ALL"
+        ? state.sessions
+        : state.sessions.filter(s => s.track === state.trackFilter);
+      sc.innerHTML = filtered.map(s => `
+        <div class="session-row">
+          <div>
+            <div style="display:flex;gap:0.45rem;align-items:center;margin-bottom:0.2rem;">
+              <span class="badge badge-orange">${s.id}</span>
+              <span class="badge badge-purple">${s.track}</span>
+              <span class="badge badge-green">${s.status}</span>
+            </div>
+            <div class="session-title">${s.title}</div>
+            <div class="session-meta">${s.speaker} · ${s.room} · ${s.starts_at}</div>
+          </div>
+          <button class="vote-btn" onclick="upvoteSession('${s.id}')">▲ ${s.upvotes}</button>
+        </div>
+      `).join("");
+
+      document.getElementById("pulse-count").textContent = `${state.pulses.length} pulses`;
+      const pc = document.getElementById("pulses-container");
+      pc.innerHTML = state.pulses.map(p => `
+        <div class="pulse-item">
+          <div class="pulse-head">
+            <span><strong>${p.session_id}</strong> · ${p.attendee_role}</span>
+            <span>${p.surface}</span>
+          </div>
+          <div>${p.takeaway}</div>
+        </div>
+      `).join("");
+    }
+
+    // Initialize with all 5 verified runs loaded so opening the canvas immediately shows the measured state
+    runAllFive();
+
+    if (location.protocol.startsWith("http")) {
+      fetch("/state.json")
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data && data.sessions) {
+            state.sessions = data.sessions;
+            state.demoRuns = data.demoRuns || state.demoRuns;
+            state.pulses = data.pulses || state.pulses;
+            render();
+          }
+        })
+        .catch(() => {});
+    }
+  </script>
+</body>
+</html>

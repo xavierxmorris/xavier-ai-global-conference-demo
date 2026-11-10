@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "xavier-ai-global-conference-demo",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "xavier-ai-global-conf-db",
+      "database_id": "b85fd8c0-b02b-4da6-86e2-012ae7ff743d"
+    }
+  ]
+}
