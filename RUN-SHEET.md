@@ -1,34 +1,13 @@
-# 3-Minute Stage Run-Sheet — Xavier AI Global Conference Demo
+# Three-minute stage run sheet
 
-**Audience:** AI engineers, solution architects, technical leads  
-**Length:** 3:00 (4 scripted beats)  
-**Cost:** $0.00 (Cloudflare Workers Free + D1 Free Tier, no credit card required)  
-**One command:**
+Before presenting: open the repository, run `.\go.ps1 -Check`, and open v3 with `.\go.ps1` or the Copilot canvas ID `xavier-ai-global-conference-canvas`. No live Cloudflare access is needed.
 
-```powershell
-.\go.ps1 -Manual
-```
+| Time | Show / click | Say / prove |
+|---|---|---|
+| 0:00-0:30 | v3 headline and first chapter | "One conference, five captured workloads, one D1 database in Sydney. This is a historical capture, not a live dashboard." |
+| 0:30-1:30 | Scroll through the five chapters and receipts | "Each workload added a vote, pulse, and run record. Labels describe scenarios; all five rerun workloads used one App MCP connection." |
+| 1:30-2:10 | What it cost | "Workload 15 reads / 20 writes. With telemetry and checks: 61 / 25. Account-wide captured day: 187 / 68. Different boundaries, all below the recorded allowances." |
+| 2:10-2:30 | Expand final votes | "These recorded vote counts match the committed snapshot. Nothing here writes D1." |
+| 2:30-3:00 | Open v2 or navigate to `/v2/`; click Governance | "The older dashboard is preserved as version 2. Same evidence, different presentation. The history and reuse instructions are in the repo." |
 
----
-
-## Beat Sheet
-
-### 0:00 — Beat 1: One MCP Config for Both Copilot CLI & Copilot App *(40s)*
-Open `C:\Users\xaviermorris\.copilot\mcp-config.json` or run `/mcp get cloudflare`.
-
-> "GitHub Copilot CLI and the GitHub Copilot App share `~/.copilot/mcp-config.json`. Adding `"cloudflare": { "type": "http", "url": "https://mcp.cloudflare.com/mcp", "tools": ["*"] }` connects both our terminal agent and desktop app to Cloudflare's remote MCP server via browser OAuth—zero local SDKs or static API keys required."
-
-### 0:40 — Beat 2: Build & Open the Main Canvas in CLI or App *(50s)*
-Open the **Xavier AI Global Conference Canvas** (`canvas/index.html` via `.\go.ps1`, or via `open_canvas` from `.github/extensions/xavier-ai-global-conference-canvas/extension.mjs`).
-
-> "This repository contains a Copilot Canvas extension in `.github/extensions/`. Whether I'm driving from **GitHub Copilot CLI** or **GitHub Copilot App**, Copilot loads the same canvas surface and renders our live AI Global Conference agenda, attendee pulse feed, and real-time Free-Tier quota telemetry."
-
-### 1:30 — Beat 3: 5 Live Rehearsal Runs Under Cloudflare Free Quota *(60s)*
-Click **↺ Reset to Baseline**, then click **▶ Run 1** through **▶ Run 5** (or **⚡ Replay All 5 Free Runs**), and show the live D1 query results from `xavier-ai-global-conf-db` (`b85fd8c0-b02b-4da6-86e2-012ae7ff743d`, `SYD`).
-
-> "Every run updates session upvotes, records an attendee pulse, and logs its execution telemetry into Cloudflare D1 in Sydney (`SYD`). Look at the quota bar: across all **5 runs**, we consumed **65 rows read** out of **5,000,000 free per day** (`0.0013%`) and **20 rows written** out of **100,000 free per day** (`0.02%`), in half a millisecond per run."
-
-### 2:30 — Beat 4: Built-in OAuth Scope Guardrails *(30s)*
-Point at **Run #4 (`TRK-04`)** in the table.
-
-> "And it's governed: our OAuth session is scoped to D1, so if an agent tries to modify Worker scripts without `workers-scripts.write`, Cloudflare MCP blocks it with HTTP 403 and names the exact scope required. Fast, zero-cost, and least-privilege by default."
+Stop the standalone server with Ctrl+C. Live execution and OAuth checks are separate optional demonstrations, not implied by replay.

@@ -1,4 +1,6 @@
 -- 5 Repeatable Rehearsal Runs under Cloudflare D1 Free Quota
+-- Historical v1 fixture: telemetry literals below are not fresh measurements.
+-- Capture D1 response metadata for new runs; see results/history/README.md.
 -- Total cost across all 5 runs: 65 rows_read (0.0013% of 5M/day free limit) + 20 rows_written (0.02% of 100k/day free limit)
 
 -- Run 1 (Copilot CLI)

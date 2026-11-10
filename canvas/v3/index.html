@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Xavier AI Global Conference — five runs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: dark light;
+    --bg: #12100e;
+    --ink: #f2ece4;
+    --muted: #b3a99c;
+    --faint: #3a332c;
+    --accent: #f38020;
+    --accent-ink: #ffb26b;
+    --serif: "Newsreader", Georgia, serif;
+    --sans: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f5f6f8;
+      --ink: #1f1a15;
+      --muted: #6b6055;
+      --faint: #dcdfe4;
+      --accent: #c95f0c;
+      --accent-ink: #a64d07;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); color: var(--ink); scrollbar-color: var(--faint) transparent; }
+  ::selection { background: var(--accent); color: #12100e; }
+  body { margin: 0; font: 400 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent-ink); text-underline-offset: 3px; }
+  a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  main { max-width: 760px; margin: 0 auto; padding: 56px 28px 72px; }
+
+  header h1 {
+    font: 500 clamp(2rem, 5vw, 3.1rem)/1.08 var(--serif);
+    letter-spacing: -0.02em; margin: 0 0 18px; text-wrap: balance;
+  }
+  header h1 em { font-style: italic; color: var(--accent-ink); }
+  .lede { font-size: 1.25rem; color: var(--muted); max-width: 58ch; margin: 0; }
+
+  ol.story { list-style: none; margin: 56px 0 0; padding: 0; position: relative; }
+  ol.story::before {
+    content: ""; position: absolute; left: 15px; top: 10px; bottom: 10px; width: 1px;
+    background: var(--faint); transform-origin: top;
+    animation: draw 1.1s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes draw { from { transform: scaleY(0); } }
+
+  .chapter { position: relative; padding: 0 0 44px 60px; }
+  .chapter:last-child { padding-bottom: 0; }
+  .marker {
+    position: absolute; left: 0; top: 2px; width: 31px; height: 31px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--bg);
+    border: 1px solid var(--accent); color: var(--accent-ink);
+    font: 500 0.8125rem/1 var(--mono); font-variant-numeric: tabular-nums;
+  }
+  .who { margin: 0 0 4px; color: var(--muted); font-size: 0.8125rem; }
+  .who strong { color: var(--ink); font-weight: 500; }
+  .chapter h2 { font: 500 1.6rem/1.3 var(--serif); letter-spacing: -0.01em; margin: 0 0 8px; text-wrap: balance; }
+  .beat { margin: 0 0 14px; max-width: 62ch; }
+  .receipt {
+    margin: 0; font: 400 0.8125rem/1.7 var(--mono); color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .receipt b { color: var(--ink); font-weight: 500; }
+
+  section.bill { margin-top: 72px; padding-top: 32px; border-top: 1px solid var(--faint); }
+  .bill h2 { font: 500 1.6rem/1.3 var(--serif); margin: 0 0 12px; letter-spacing: -0.01em; }
+  .bill p { margin: 0 0 20px; max-width: 62ch; }
+  .meter { display: grid; grid-template-columns: 4.5rem 1fr auto; gap: 6px 14px; align-items: center; margin: 0 0 10px; font-size: 0.8125rem; }
+  .meter span:first-child { color: var(--muted); }
+  .track { height: 6px; background: var(--faint); border-radius: 3px; overflow: hidden; }
+  .fill { height: 100%; min-width: 3px; background: var(--accent); border-radius: 3px; }
+  .meter output { font: 400 0.8125rem var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+
+  details { margin-top: 40px; border-top: 1px solid var(--faint); padding-top: 18px; }
+  summary { cursor: pointer; font-weight: 500; }
+  summary:hover { color: var(--accent-ink); }
+  .votes { list-style: none; padding: 0; margin: 16px 0 0; }
+  .votes li { display: flex; gap: 16px; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--faint); font-size: 0.8125rem; }
+  .votes li span:last-child { font: 500 0.8125rem var(--mono); font-variant-numeric: tabular-nums; color: var(--accent-ink); white-space: nowrap; }
+
+  footer { margin-top: 40px; font-size: 0.8125rem; color: var(--muted); max-width: 66ch; }
+  footer p { margin: 0 0 8px; }
+  .error { color: var(--accent-ink); }
+
+  @media (max-width: 520px) {
+    main { padding: 36px 20px 56px; }
+    .chapter { padding-left: 48px; }
+    .meter { grid-template-columns: 1fr auto; }
+    .meter .track { grid-column: 1 / -1; grid-row: 2; }
+  }
+  @media (prefers-reduced-motion: reduce) { ol.story::before { animation: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>One show day, five runs, <em>one edge database</em>.</h1>
+    <p class="lede">Each run is a moment from the Xavier AI Global Conference. Every one wrote to the same Cloudflare D1 database in Sydney, and the whole rehearsal stayed inside the free plan.</p>
+  </header>
+
+  <ol class="story" id="story" aria-live="polite"><li class="chapter"><p class="who">Loading the D1 snapshot…</p></li></ol>
+
+  <section class="bill" aria-labelledby="bill-title">
+    <h2 id="bill-title">What it cost</h2>
+    <p id="bill-text">Loading…</p>
+    <div class="meter"><span>Reads</span><div class="track"><div class="fill" id="reads-fill" style="width:0"></div></div><output id="reads-out">—</output></div>
+    <div class="meter"><span>Writes</span><div class="track"><div class="fill" id="writes-fill" style="width:0"></div></div><output id="writes-out">—</output></div>
+  </section>
+
+  <details>
+    <summary>Where the votes ended up</summary>
+    <ul class="votes" id="votes"></ul>
+  </details>
+
+  <footer>
+    <p>The story beats retell the scenario stored with each run. Every run did the same D1 work: one upvote, one attendee pulse, one run record.</p>
+    <p>Surface names are scenario labels. All five rerun workloads were sent through one Copilot App MCP connection, not five separate clients. Run 4's label refers to an earlier scope probe, not a new check during the rerun.</p>
+    <p id="source"></p>
+  </footer>
+</main>
+<script>
+  const beats = {
+    1: { title: "The keynote opens the canvas", text: "From the terminal, Copilot CLI bootstraps the conference canvas and casts the first vote of the day for the keynote." },
+    2: { title: "The App joins the same data", text: "The GitHub Copilot App, on the shared MCP setup, adds its own upvote and an attendee pulse. No second configuration." },
+    3: { title: "The canvas keeps up", text: "The interactive canvas reads the same rows back and checks that the track filter stays in sync." },
+    4: { title: "The guardrails hold", text: "A scope probe tests the OAuth boundary: the token may touch D1, while Workers Scripts should answer 403." },
+    5: { title: "The rehearsal closes under quota", text: "A final verification run confirms all five records landed, still on Cloudflare's free plan." }
+  };
+
+  const esc = value => { const s = document.createElement("span"); s.textContent = String(value); return s.innerHTML; };
+  const fmt = n => n.toLocaleString("en-US");
+  const pct = (used, limit) => {
+    const p = used / limit * 100;
+    return (p < 0.01 ? p.toFixed(4) : p.toFixed(3)).replace(/0+$/, "").replace(/\.$/, "") + "%";
+  };
+
+  fetch("state.json")
+    .then(r => { if (!r.ok) throw new Error("Snapshot request failed"); return r.json(); })
+    .then(data => {
+      const sessions = Object.fromEntries(data.sessions.map(s => [s.id, s]));
+      const roles = {};
+      for (const p of [...data.pulses].sort((a, b) => b.id - a.id)) {
+        const run = Number((p.takeaway.match(/^Run (\d)/) || [])[1]);
+        if (run && !roles[run]) roles[run] = p.attendee_role;
+      }
+      const runs = [...data.demoRuns].sort((a, b) => a.run_number - b.run_number);
+
+      document.getElementById("story").innerHTML = runs.map(r => {
+        const beat = beats[r.run_number] || { title: r.scenario, text: "" };
+        const s = sessions[r.voted_session_id] || { title: r.voted_session_id, upvotes: "—" };
+        const time = String(r.executed_at).slice(11, 16);
+        return `<li class="chapter">
+          <span class="marker" aria-hidden="true">${r.run_number}</span>
+          <p class="who"><strong>${esc(roles[r.run_number] || "Attendee")}</strong> · ${esc(r.surface)} · ${esc(time)} UTC</p>
+          <h2><span class="visually-hidden">Run ${r.run_number}: </span>${esc(beat.title)}</h2>
+          <p class="beat">${esc(beat.text)}</p>
+          <p class="receipt">Voted for <b>${esc(s.title)}</b>, now ${esc(s.upvotes)} votes<br>${r.rows_read} reads · ${r.rows_written} writes · ${Number(r.sql_duration_ms).toFixed(2)} ms · ${esc(r.colo)}</p>
+        </li>`;
+      }).join("");
+
+      const reads = runs.reduce((t, r) => t + r.rows_read, 0);
+      const writes = runs.reduce((t, r) => t + r.rows_written, 0);
+      const q = data.quota;
+      document.getElementById("bill-text").innerHTML = q
+        ? `The five runs used <b>${reads} reads</b> and <b>${writes} writes</b>. Across the whole account on ${esc(q.date)}, D1 counted ${fmt(q.readsUsed)} reads and ${fmt(q.writesUsed)} writes against the free daily allowance. Price: $0.`
+        : `The five runs used ${reads} reads and ${writes} writes.`;
+      if (q) {
+        document.getElementById("reads-out").textContent = `${fmt(q.readsUsed)} / ${fmt(q.readsLimit)} · ${pct(q.readsUsed, q.readsLimit)}`;
+        document.getElementById("writes-out").textContent = `${fmt(q.writesUsed)} / ${fmt(q.writesLimit)} · ${pct(q.writesUsed, q.writesLimit)}`;
+        document.getElementById("reads-fill").style.width = (q.readsUsed / q.readsLimit * 100) + "%";
+        document.getElementById("writes-fill").style.width = (q.writesUsed / q.writesLimit * 100) + "%";
+        document.getElementById("source").innerHTML = `${esc(data.source)}. Usage from ${esc(q.source)}. Limits from <a href="${esc(q.pricingUrl)}" target="_blank" rel="noopener">Cloudflare D1 pricing</a>.`;
+      } else {
+        document.getElementById("source").textContent = data.source;
+      }
+
+      document.getElementById("votes").innerHTML = [...data.sessions]
+        .sort((a, b) => b.upvotes - a.upvotes)
+        .map(s => `<li><span>${esc(s.title)}</span><span>${esc(s.upvotes)}</span></li>`).join("");
+    })
+    .catch(() => {
+      document.getElementById("story").innerHTML = '<li class="chapter"><p class="error">Could not load the D1 snapshot. Reopen the canvas to retry.</p></li>';
+      document.getElementById("bill-text").textContent = "Unavailable until the snapshot loads.";
+    });
+</script>
+<style>.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}</style>
+</body>
+</html>

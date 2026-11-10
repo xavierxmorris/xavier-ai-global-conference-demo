@@ -1,0 +1,227 @@
+{
+  "source": "Cloudflare D1 snapshot retrieved 2026-11-10 22:39 UTC",
+  "sessions": [
+    {
+      "id": "KEY-01",
+      "track": "Keynote",
+      "title": "Agentic Engineering at Global Scale: CLI, App & Edge MCP",
+      "speaker": "Xavier X. Morris",
+      "room": "Main Hall A",
+      "starts_at": "09:00 AEDT",
+      "status": "LIVE NOW",
+      "upvotes": 44
+    },
+    {
+      "id": "TRK-02",
+      "track": "MCP & Tooling",
+      "title": "Zero-Cost Edge Data Planes with Cloudflare D1 & Copilot MCP",
+      "speaker": "Xavier X. Morris",
+      "room": "Harbour Theatre",
+      "starts_at": "10:15 AEDT",
+      "status": "UP NEXT",
+      "upvotes": 33
+    },
+    {
+      "id": "TRK-03",
+      "track": "Canvas & UX",
+      "title": "Interactive Canvases in GitHub Copilot CLI and Copilot App",
+      "speaker": "Guest Architecture Panel",
+      "room": "Room 204",
+      "starts_at": "11:30 AEDT",
+      "status": "SCHEDULED",
+      "upvotes": 26
+    },
+    {
+      "id": "TRK-04",
+      "track": "Governance",
+      "title": "Scoped OAuth & Least-Privilege MCP Guardrails in Production",
+      "speaker": "Security Engineering Track",
+      "room": "Room 102",
+      "starts_at": "13:30 AEDT",
+      "status": "SCHEDULED",
+      "upvotes": 21
+    },
+    {
+      "id": "TRK-05",
+      "track": "Live Lab",
+      "title": "5-Run Repeatable Edge Rehearsal Under Free Quota",
+      "speaker": "Workshop Facilitators",
+      "room": "Lab Arena",
+      "starts_at": "15:00 AEDT",
+      "status": "SCHEDULED",
+      "upvotes": 30
+    }
+  ],
+  "demoRuns": [
+    {
+      "run_number": 1,
+      "surface": "Copilot CLI",
+      "scenario": "Run 1: Live conference canvas bootstrap from Copilot CLI",
+      "voted_session_id": "KEY-01",
+      "colo": "SYD",
+      "rows_read": 3,
+      "rows_written": 4,
+      "sql_duration_ms": 0.3703,
+      "executed_at": "2026-11-10 22:37:03"
+    },
+    {
+      "run_number": 2,
+      "surface": "Copilot App",
+      "scenario": "Run 2: Live upvote + pulse from GitHub Copilot App shared MCP",
+      "voted_session_id": "TRK-02",
+      "colo": "SYD",
+      "rows_read": 3,
+      "rows_written": 4,
+      "sql_duration_ms": 0.5441,
+      "executed_at": "2026-11-10 22:37:56"
+    },
+    {
+      "run_number": 3,
+      "surface": "Copilot Canvas",
+      "scenario": "Run 3: Interactive canvas state sync & track filter check",
+      "voted_session_id": "TRK-03",
+      "colo": "SYD",
+      "rows_read": 3,
+      "rows_written": 4,
+      "sql_duration_ms": 0.4276,
+      "executed_at": "2026-11-10 22:37:56"
+    },
+    {
+      "run_number": 4,
+      "surface": "Copilot CLI",
+      "scenario": "Run 4: OAuth scope boundary probe (D1 allowed, Workers Scripts 403)",
+      "voted_session_id": "TRK-04",
+      "colo": "SYD",
+      "rows_read": 3,
+      "rows_written": 4,
+      "sql_duration_ms": 0.3379,
+      "executed_at": "2026-11-10 22:37:57"
+    },
+    {
+      "run_number": 5,
+      "surface": "Copilot App",
+      "scenario": "Run 5: Final rehearsal verification under Cloudflare Free quota",
+      "voted_session_id": "TRK-05",
+      "colo": "SYD",
+      "rows_read": 3,
+      "rows_written": 4,
+      "sql_duration_ms": 0.3936,
+      "executed_at": "2026-11-10 22:37:57"
+    }
+  ],
+  "pulses": [
+    {
+      "id": 13,
+      "session_id": "TRK-05",
+      "attendee_role": "Workshop Facilitator",
+      "takeaway": "Run 5: Final rehearsal verification under Cloudflare Free quota",
+      "surface": "Copilot App",
+      "created_at": "2026-11-10 22:37:57"
+    },
+    {
+      "id": 12,
+      "session_id": "TRK-04",
+      "attendee_role": "Security Lead",
+      "takeaway": "Run 4: OAuth scope boundary probe (D1 allowed, Workers Scripts 403)",
+      "surface": "Copilot CLI",
+      "created_at": "2026-11-10 22:37:56"
+    },
+    {
+      "id": 11,
+      "session_id": "TRK-03",
+      "attendee_role": "Product Designer",
+      "takeaway": "Run 3: Interactive canvas state sync & track filter check",
+      "surface": "Copilot Canvas",
+      "created_at": "2026-11-10 22:37:56"
+    },
+    {
+      "id": 10,
+      "session_id": "TRK-02",
+      "attendee_role": "Solutions Architect",
+      "takeaway": "Run 2: Live upvote + pulse from GitHub Copilot App shared MCP",
+      "surface": "Copilot App",
+      "created_at": "2026-11-10 22:37:56"
+    },
+    {
+      "id": 9,
+      "session_id": "KEY-01",
+      "attendee_role": "Keynote Host",
+      "takeaway": "Run 1: Live conference canvas bootstrap from Copilot CLI",
+      "surface": "Copilot CLI",
+      "created_at": "2026-11-10 22:37:03"
+    },
+    {
+      "id": 8,
+      "session_id": "TRK-05",
+      "attendee_role": "Workshop Facilitator",
+      "takeaway": "Run 5: Final rehearsal verification under Cloudflare Free quota",
+      "surface": "Copilot App",
+      "created_at": "2026-11-10 04:55:10"
+    },
+    {
+      "id": 7,
+      "session_id": "TRK-04",
+      "attendee_role": "Security Lead",
+      "takeaway": "Run 4: OAuth scope boundary probe (D1 allowed, Workers Scripts 403)",
+      "surface": "Copilot CLI",
+      "created_at": "2026-11-10 04:55:10"
+    },
+    {
+      "id": 6,
+      "session_id": "TRK-03",
+      "attendee_role": "Product Designer",
+      "takeaway": "Run 3: Interactive canvas state sync & track filter check",
+      "surface": "Copilot Canvas",
+      "created_at": "2026-11-10 04:55:10"
+    },
+    {
+      "id": 5,
+      "session_id": "TRK-02",
+      "attendee_role": "Solutions Architect",
+      "takeaway": "Run 2: Live upvote + pulse from GitHub Copilot App shared MCP",
+      "surface": "Copilot App",
+      "created_at": "2026-11-10 04:55:10"
+    },
+    {
+      "id": 4,
+      "session_id": "KEY-01",
+      "attendee_role": "Keynote Host",
+      "takeaway": "Run 1: Live conference canvas bootstrap from Copilot CLI",
+      "surface": "Copilot CLI",
+      "created_at": "2026-11-10 04:55:10"
+    },
+    {
+      "id": 3,
+      "session_id": "TRK-03",
+      "attendee_role": "Staff Developer",
+      "takeaway": "The local/edge Conference Canvas renders live D1 rows with zero paid compute.",
+      "surface": "Copilot Canvas",
+      "created_at": "2026-11-10 04:54:21"
+    },
+    {
+      "id": 2,
+      "session_id": "TRK-02",
+      "attendee_role": "Cloud Architect",
+      "takeaway": "D1 Free tier gives 5M reads/day and 100k writes/day—5 demo runs use <0.05% of daily quota.",
+      "surface": "Copilot App",
+      "created_at": "2026-11-10 04:54:21"
+    },
+    {
+      "id": 1,
+      "session_id": "KEY-01",
+      "attendee_role": "Principal Engineer",
+      "takeaway": "Shared ~/.copilot/mcp-config.json across CLI and App avoids duplicate setup.",
+      "surface": "Copilot CLI",
+      "created_at": "2026-11-10 04:54:21"
+    }
+  ],
+  "quota": {
+    "date": "2026-11-10",
+    "readsUsed": 187,
+    "writesUsed": 68,
+    "readsLimit": 5000000,
+    "writesLimit": 100000,
+    "source": "Cloudflare dashboard, D1 metrics (UTC day)",
+    "pricingUrl": "https://developers.cloudflare.com/d1/platform/pricing/"
+  }
+}

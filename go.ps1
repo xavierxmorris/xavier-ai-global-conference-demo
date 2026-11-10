@@ -18,6 +18,9 @@
 
 .PARAMETER NoBrowser
     Print the beats without opening browser windows.
+
+.PARAMETER CanvasVersion
+    Open the v3 story (default), v2 recorded dashboard, or v1 historical local replay.
 #>
 
 [CmdletBinding()]
@@ -25,7 +28,9 @@ param(
     [switch]$Manual,
     [switch]$Live,
     [switch]$Check,
-    [switch]$NoBrowser
+    [switch]$NoBrowser,
+    [ValidateSet(1, 2, 3)]
+    [int]$CanvasVersion = 3
 )
 
 $ErrorActionPreference = 'Stop'
@@ -42,7 +47,16 @@ $RequiredFiles = @(
     'sql\five-runs.sql',
     'canvas\index.html',
     '.github\extensions\xavier-ai-global-conference-canvas\extension.mjs',
-    'results\live-5-runs-2026-11-10.md'
+    'results\live-5-runs-2026-11-10.md',
+    'canvas\server.mjs',
+    'canvas\v2\index.html',
+    'canvas\v3\index.html',
+    'canvas\README.md',
+    'results\history\conference-d1-snapshot-2026-11-10.json',
+    'results\history\conference-d1-before-rerun-2026-11-10.json',
+    'results\history\README.md',
+    'HISTORY.md',
+    'tests\canvas.test.mjs'
 )
 
 if ($Check) {
@@ -64,17 +78,18 @@ if ($Check) {
         exit 1
     }
 
-    $readsPerRun = 13
-    $writesPerRun = 4
-    $runs = 5
-    $totalReads = $readsPerRun * $runs
-    $totalWrites = $writesPerRun * $runs
+    $snapshot = Get-Content (Join-Path $root 'results\history\conference-d1-snapshot-2026-11-10.json') -Raw | ConvertFrom-Json
+    if (($snapshot.demoRuns.run_number | Sort-Object) -join ',' -ne '1,2,3,4,5') {
+        throw 'Snapshot must contain exactly Runs 1 through 5.'
+    }
+    $totalReads = ($snapshot.demoRuns | Measure-Object rows_read -Sum).Sum
+    $totalWrites = ($snapshot.demoRuns | Measure-Object rows_written -Sum).Sum
     if ($totalReads -ge 5000000 -or $totalWrites -ge 100000) {
         Write-Error "5-run quota check exceeded Cloudflare D1 Free daily limits."
         exit 1
     }
 
-    Write-Host "CHECK PASSED: All $($RequiredFiles.Count) files verified. 5 runs use $totalReads/5,000,000 reads (0.0013%) and $totalWrites/100,000 writes (0.0200%) on Cloudflare D1 Free Tier." -ForegroundColor Green
+    Write-Host "CHECK PASSED: All $($RequiredFiles.Count) files verified. Recorded workload: $totalReads/5,000,000 reads and $totalWrites/100,000 writes. Telemetry and verification are additional; see results\history\README.md." -ForegroundColor Green
     exit 0
 }
 
@@ -100,21 +115,35 @@ Write-Host "  ~/.copilot/mcp-config.json connects https://mcp.cloudflare.com/mcp
 Pause-Beat -Seconds 2 -Label "Open Main Conference Canvas"
 
 Write-Host "[Beat 2 / 0:45] Opening Xavier AI Global Conference Canvas..." -ForegroundColor Yellow
-$canvasFile = Join-Path $root 'canvas\index.html'
-if (-not $NoBrowser) {
+$canvasFile = Join-Path $root "canvas\v$CanvasVersion\index.html"
+if ($CanvasVersion -eq 1) {
+    $canvasFile = Join-Path $root 'canvas\index.html'
+}
+if (-not $NoBrowser -and $CanvasVersion -eq 1) {
     Start-Process $canvasFile
 }
-Write-Host "  Canvas path: $canvasFile"
+Write-Host "  Canvas v$CanvasVersion path: $canvasFile"
 Write-Host "  Extension  : .github\extensions\xavier-ai-global-conference-canvas\extension.mjs"
 Pause-Beat -Seconds 2 -Label "5 Free-Quota Rehearsal Runs"
 
-Write-Host "[Beat 3 / 1:30] 5 Verified Runs on Cloudflare D1 Free Tier (SYD):" -ForegroundColor Yellow
-Write-Host "  Run #1 (Copilot CLI)    -> KEY-01 upvoted (43) | 13R / 4W | 0.591 ms"
-Write-Host "  Run #2 (Copilot App)    -> TRK-02 upvoted (32) | 13R / 4W | 0.561 ms"
-Write-Host "  Run #3 (Copilot Canvas) -> TRK-03 upvoted (25) | 13R / 4W | 0.500 ms"
-Write-Host "  Run #4 (Copilot CLI)    -> TRK-04 upvoted (20) | 13R / 4W | 0.508 ms"
-Write-Host "  Run #5 (Copilot App)    -> TRK-05 upvoted (29) | 13R / 4W | 0.480 ms"
-Write-Host "  Total Quota Used: 65 / 5,000,000 reads (0.0013%), 20 / 100,000 writes (0.0200%), 32 KB / 5 GB." -ForegroundColor Green
+Write-Host "[Beat 3 / 1:30] 5 Recorded Runs on Cloudflare D1 Free Tier (SYD):" -ForegroundColor Yellow
+$snapshot = Get-Content (Join-Path $root 'results\history\conference-d1-snapshot-2026-11-10.json') -Raw | ConvertFrom-Json
+foreach ($run in $snapshot.demoRuns) {
+    $session = $snapshot.sessions | Where-Object id -eq $run.voted_session_id
+    Write-Host "  Run #$($run.run_number) ($($run.surface)) -> $($run.voted_session_id) ($($session.upvotes) votes) | $($run.rows_read)R / $($run.rows_written)W | $($run.sql_duration_ms) ms"
+}
+Write-Host '  Workload: 15 reads / 20 writes; telemetry: +5 reads / 5 writes; full measured operation: 61 / 25.' -ForegroundColor Green
+Write-Host '  Account-wide snapshot (10 Nov UTC): 187 / 5M reads, 68 / 100k writes. Not current usage.'
+Write-Host '  Surface names are scenario labels; all five rerun workloads used one App MCP connection.'
+
+if (-not $NoBrowser -and $CanvasVersion -ne 1) {
+    if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+        throw 'Node.js is required for v2/v3. Install Node.js 22+ or use -CanvasVersion 1 for the historical replay.'
+    }
+    Write-Host 'Starting read-only canvas server. Press Ctrl+C to stop; use -NoBrowser -Live to launch Copilot directly.'
+    & node (Join-Path $root 'canvas\server.mjs') "--version=$CanvasVersion" --open
+    if ($LASTEXITCODE -ne 0) { throw "Canvas server exited with $LASTEXITCODE." }
+}
 
 if ($Live) {
     Write-Host ""
